@@ -8,7 +8,7 @@ use Throwable;
 
 final class JsonPlaceholderUserClient
 {
-    private const string URL = 'https://jsonplaceholder.typicode.com/users';
+    private const URL = 'https://jsonplaceholder.typicode.com/users';
 
     public function __construct(
         private readonly HttpClientInterface $client
