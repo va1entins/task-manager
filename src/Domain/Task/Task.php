@@ -62,4 +62,21 @@ final class Task
     {
         return $this->userId;
     }
+
+    public static function reconstitute(
+        TaskId $id,
+        string $title,
+        TaskStatus $status,
+        UserId $userId
+    ): self {
+        $task = new self(
+            $id,
+            $title,
+            $userId
+        );
+
+        $task->status = $status;
+
+        return $task;
+    }
 }
