@@ -35,11 +35,40 @@ final readonly class TaskDoctrineRepository implements TaskRepositoryInterface
             return null;
         }
 
+        return $this->mapToDomain($entity);
+    }
+
+    /**
+     * @return Task[]
+     */
+    public function findByUserId(UserId $userId): array
+    {
+        $entities = $this->em
+            ->getRepository(TaskEntity::class)
+            ->findBy(['userId' => $userId->value()]);
+
+        return array_map([$this, 'mapToDomain'], $entities);
+    }
+
+    /**
+     * @return Task[]
+     */
+    public function findAll(): array
+    {
+        $entities = $this->em
+            ->getRepository(TaskEntity::class)
+            ->findAll();
+
+        return array_map([$this, 'mapToDomain'], $entities);
+    }
+
+    private function mapToDomain(TaskEntity $entity): Task
+    {
         return Task::reconstitute(
             new TaskId($entity->id()),
-            $entity->title(),
+            $entity->getTitle(),
             $entity->status(),
-            new UserId($entity->userId())
+            new UserId($entity->getUserId())
         );
     }
 }
