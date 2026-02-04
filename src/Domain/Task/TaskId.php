@@ -19,4 +19,9 @@ final readonly class TaskId
     {
         return $this->value;
     }
+
+    public function toString(): string
+    {
+        return (string) $this->value;
+    }
 }
