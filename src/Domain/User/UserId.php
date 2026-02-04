@@ -12,4 +12,9 @@ final readonly class UserId
     {
         return $this->value;
     }
+
+    public function toString(): string
+    {
+        return (string) $this->value;
+    }
 }
