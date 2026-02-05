@@ -3,7 +3,7 @@
 namespace App\Application\UseCase;
 
 use App\Application\Dto\CreateTaskCommand;
-use App\Domain\Event\TaskCreatedEvent;
+use App\Domain\Event\DomainEventFactory;
 use App\Domain\Repository\TaskRepositoryInterface;
 use App\Domain\Task\Task;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -13,6 +13,7 @@ final readonly class CreateTask
     public function __construct(
         private TaskRepositoryInterface $tasks,
         private MessageBusInterface     $bus,
+        private DomainEventFactory      $eventFactory,
     ) {}
 
     public function execute(CreateTaskCommand $command): Task
@@ -22,17 +23,18 @@ final readonly class CreateTask
             $command->userId
         );
 
-        $this->tasks->save($task);
+        try {
+            $this->tasks->save($task);
 
-        $this->bus->dispatch(
-            new TaskCreatedEvent(
-                taskId: $task->id(),
-                userId: $task->userId(),
-                title: $task->title(),
-                status: $task->status(),
-                occurredAt: new \DateTimeImmutable(),
-            )
-        );
+            $this->bus->dispatch(
+                $this->eventFactory->taskCreated($task)
+            );
+        } catch (\Throwable $e) {
+            throw new \RuntimeException(
+                'Failed to create task',
+                previous: $e
+            );
+        }
 
         return $task;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Application\UseCase;
 
-use App\Application\Dto\TaskReadDto;
+use App\Application\Strategy\AllTaskListStrategy;
 use App\Domain\Repository\TaskRepositoryInterface;
 
 final readonly class ListAllTasks
@@ -11,21 +11,8 @@ final readonly class ListAllTasks
         private TaskRepositoryInterface $taskRepository
     ) {}
 
-    /**
-     * @return TaskReadDto[]
-     */
     public function execute(): array
     {
-        $tasks = $this->taskRepository->findAll();
-
-        return array_map(
-            static fn ($task) => new TaskReadDto(
-                id: $task->id()->value(),
-                title: $task->title(),
-                status: $task->status(),
-                userId: $task->userId()->value(),
-            ),
-            $tasks
-        );
+        return (new AllTaskListStrategy($this->taskRepository))->getTasks();
     }
 }
