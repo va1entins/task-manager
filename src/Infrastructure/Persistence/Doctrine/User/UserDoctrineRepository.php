@@ -26,6 +26,9 @@ final readonly class UserDoctrineRepository implements UserRepositoryInterface
                 );
 
                 $this->em->persist($entity);
+            } else {
+                $entity->setName($user->name());
+                $entity->setEmail($user->email());
             }
 
             $this->em->flush();

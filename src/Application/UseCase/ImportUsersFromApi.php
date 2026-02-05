@@ -8,11 +8,11 @@ use App\Domain\User\User;
 use App\Domain\User\UserId;
 use App\Infrastructure\Http\JsonPlaceholder\JsonPlaceholderUserClient;
 
-final class ImportUsersFromApi
+final readonly class ImportUsersFromApi
 {
     public function __construct(
         private JsonPlaceholderUserClient $client,
-        private UserRepositoryInterface $users
+        private UserRepositoryInterface   $users
     ) {}
 
     public function execute(): int

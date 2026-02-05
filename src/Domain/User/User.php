@@ -2,7 +2,7 @@
 
 namespace App\Domain\User;
 
-final class User
+final readonly class User
 {
     public function __construct(
         private UserId $id,
