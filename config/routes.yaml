@@ -18,3 +18,7 @@ api_list_all_tasks:
   controller: App\Infrastructure\Http\Controller\Api\ListAllTasksController
   methods: [GET]
 
+api_import_users:
+  path: /api/admin/users/import
+  controller: App\Infrastructure\Http\Controller\Api\ImportUsersController
+  methods: [POST]
