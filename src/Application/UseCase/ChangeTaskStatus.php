@@ -3,15 +3,18 @@
 namespace App\Application\UseCase;
 
 use App\Application\Dto\ChangeTaskStatusCommand;
-use App\Domain\Event\TaskStatusUpdatedEvent;
+use App\Application\Strategy\TaskStatusChangeStrategyInterface;
+use App\Domain\Event\DomainEventFactory;
 use App\Domain\Repository\TaskRepositoryInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 final readonly class ChangeTaskStatus
 {
     public function __construct(
-        private TaskRepositoryInterface $tasks,
-        private MessageBusInterface     $bus,
+        private TaskRepositoryInterface              $tasks,
+        private MessageBusInterface                  $bus,
+        private DomainEventFactory                   $eventFactory,
+        private TaskStatusChangeStrategyInterface    $statusStrategy,
     ) {}
 
     public function execute(ChangeTaskStatusCommand $command): void
@@ -24,17 +27,22 @@ final readonly class ChangeTaskStatus
 
         $oldStatus = $task->status();
 
-        $task->changeStatus($command->status);
-
-        $this->tasks->save($task);
-
-        $this->bus->dispatch(
-            new TaskStatusUpdatedEvent(
-                taskId: $task->id(),
-                oldStatus: $oldStatus,
-                newStatus: $task->status(),
-                occurredAt: new \DateTimeImmutable(),
-            )
+        $this->statusStrategy->changeStatus(
+            $task,
+            $command->status
         );
+
+        try {
+            $this->tasks->save($task);
+
+            $this->bus->dispatch(
+                $this->eventFactory->taskStatusUpdated($task, $oldStatus)
+            );
+        } catch (\Throwable $e) {
+            throw new \RuntimeException(
+                'Failed to change task status',
+                previous: $e
+            );
+        }
     }
 }
