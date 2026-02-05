@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Application\Service;
+namespace App\Infrastructure\Http\CurrentUser;
 
+use App\Application\Service\CurrentUserProviderInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\User\User;
 use App\Domain\User\UserId;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-final readonly class CurrentUserProvider
+readonly class HttpHeaderCurrentUserProvider implements CurrentUserProviderInterface
 {
     public function __construct(
         private RequestStack            $requestStack,

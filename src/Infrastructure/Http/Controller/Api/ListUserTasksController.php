@@ -3,14 +3,14 @@
 namespace App\Infrastructure\Http\Controller\Api;
 
 use App\Application\UseCase\ListUserTasks;
-use App\Application\Service\CurrentUserProvider;
+use App\Infrastructure\Http\CurrentUser\HttpHeaderCurrentUserProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 final readonly class ListUserTasksController
 {
     public function __construct(
-        private ListUserTasks       $useCase,
-        private CurrentUserProvider $currentUserProvider
+        private ListUserTasks                 $useCase,
+        private HttpHeaderCurrentUserProvider $currentUserProvider
     ) {}
 
     public function __invoke(): JsonResponse
