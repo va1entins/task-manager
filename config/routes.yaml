@@ -1,1 +1,20 @@
+api_create_task:
+  path: /api/tasks
+  controller: App\Infrastructure\Http\Controller\Api\CreateTaskController
+  methods: [POST]
+
+api_change_task_status:
+  path: /api/tasks/{taskId}/status
+  controller: App\Infrastructure\Http\Controller\Api\ChangeTaskStatusController
+  methods: [PATCH]
+
+api_list_user_tasks:
+  path: /api/tasks
+  controller: App\Infrastructure\Http\Controller\Api\ListUserTasksController
+  methods: [GET]
+
+api_list_all_tasks:
+  path: /api/admin/tasks
+  controller: App\Infrastructure\Http\Controller\Api\ListAllTasksController
+  methods: [GET]
 
