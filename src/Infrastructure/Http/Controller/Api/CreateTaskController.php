@@ -3,8 +3,8 @@
 namespace App\Infrastructure\Http\Controller\Api;
 
 use App\Application\Dto\CreateTaskCommand;
+use App\Application\Service\CurrentUserProviderInterface;
 use App\Application\UseCase\CreateTask;
-use App\Infrastructure\Http\CurrentUser\HttpHeaderCurrentUserProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,7 +12,7 @@ final readonly class CreateTaskController
 {
     public function __construct(
         private CreateTask                    $useCase,
-        private HttpHeaderCurrentUserProvider $currentUserProvider
+        private CurrentUserProviderInterface  $currentUserProvider
     ){}
 
     public function __invoke(Request $request): JsonResponse

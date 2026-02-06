@@ -4,6 +4,7 @@ namespace App\Application\Strategy;
 
 use App\Application\Dto\TaskReadDto;
 use App\Domain\Repository\TaskRepositoryInterface;
+use App\Domain\User\UserId;
 
 final readonly class AllTaskListStrategy implements TaskListStrategyInterface
 {
@@ -11,7 +12,7 @@ final readonly class AllTaskListStrategy implements TaskListStrategyInterface
         private TaskRepositoryInterface $taskRepository
     ) {}
 
-    public function getTasks(): array
+    public function getTasks(?UserId $userId = null): array
     {
         $tasks = $this->taskRepository->findAll();
 

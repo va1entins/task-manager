@@ -2,17 +2,16 @@
 
 namespace App\Application\UseCase;
 
-use App\Application\Strategy\AllTaskListStrategy;
-use App\Domain\Repository\TaskRepositoryInterface;
+use App\Application\Strategy\TaskListStrategyInterface;
 
 final readonly class ListAllTasks
 {
     public function __construct(
-        private TaskRepositoryInterface $taskRepository
+        private TaskListStrategyInterface $strategy
     ) {}
 
     public function execute(): array
     {
-        return (new AllTaskListStrategy($this->taskRepository))->getTasks();
+        return $this->strategy->getTasks();
     }
 }
