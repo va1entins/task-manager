@@ -22,3 +22,35 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Infrastructure\Http\Controller\:
+        resource: '../src/Infrastructure/Http/Controller/'
+        tags: ['controller.service_arguments']
+        public: true
+
+    App\Domain\Event\DomainEventFactory:
+        autowire: true
+        autoconfigure: true
+
+    App\Domain\Event\DomainEventFactoryInterface:
+        alias: App\Domain\Event\DomainEventFactory
+
+    App\Application\Service\UserImportClientInterface:
+        alias: App\Infrastructure\Http\JsonPlaceholder\JsonPlaceholderUserClient
+
+    App\Application\UseCase\ListAllTasks:
+        arguments:
+            $strategy: '@App\Application\Strategy\AllTaskListStrategy'
+
+    App\Application\UseCase\ListUserTasks:
+        arguments:
+            $strategy: '@App\Application\Strategy\UserTaskListStrategy'
+
+    App\Application\Strategy\TaskStatusChangeStrategyInterface:
+        alias: App\Application\Strategy\DefaultTaskStatusChangeStrategy
+
+    App\Domain\Repository\TaskRepositoryInterface:
+        alias: App\Infrastructure\Persistence\Doctrine\Task\TaskDoctrineRepository
+
+    App\Domain\Repository\UserRepositoryInterface:
+        alias: App\Infrastructure\Persistence\Doctrine\User\UserDoctrineRepository
