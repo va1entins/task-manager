@@ -3,15 +3,15 @@
 namespace App\Application\UseCase;
 
 use App\Application\Dto\ImportedUserDto;
+use App\Application\Service\UserImportClientInterface;
 use App\Domain\Repository\UserRepositoryInterface;
 use App\Domain\User\User;
 use App\Domain\User\UserId;
-use App\Infrastructure\Http\JsonPlaceholder\JsonPlaceholderUserClient;
 
 final readonly class ImportUsersFromApi
 {
     public function __construct(
-        private JsonPlaceholderUserClient $client,
+        private UserImportClientInterface $client,
         private UserRepositoryInterface   $users
     ) {}
 

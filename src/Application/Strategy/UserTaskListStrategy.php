@@ -9,13 +9,16 @@ use App\Domain\User\UserId;
 final readonly class UserTaskListStrategy implements TaskListStrategyInterface
 {
     public function __construct(
-        private TaskRepositoryInterface $taskRepository,
-        private UserId                  $userId,
+        private TaskRepositoryInterface $taskRepository
     ) {}
 
-    public function getTasks(): array
+    public function getTasks(?UserId $userId = null): array
     {
-        $tasks = $this->taskRepository->findByUserId($this->userId);
+        if ($userId === null) {
+            return [];
+        }
+
+        $tasks = $this->taskRepository->findByUserId($userId);
 
         return array_map(
             static fn ($task) => new TaskReadDto(

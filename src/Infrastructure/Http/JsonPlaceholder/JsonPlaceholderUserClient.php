@@ -2,11 +2,12 @@
 
 namespace App\Infrastructure\Http\JsonPlaceholder;
 
+use App\Application\Service\UserImportClientInterface;
 use App\Infrastructure\Http\JsonPlaceholder\Dto\JsonPlaceholderUserDto;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
-final class JsonPlaceholderUserClient
+final class JsonPlaceholderUserClient implements UserImportClientInterface
 {
     private const URL = 'https://jsonplaceholder.typicode.com/users';
 
@@ -14,9 +15,6 @@ final class JsonPlaceholderUserClient
         private readonly HttpClientInterface $client
     ) {}
 
-    /**
-     * @return JsonPlaceholderUserDto[]
-     */
     public function fetchUsers(): array
     {
         try {

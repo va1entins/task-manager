@@ -24,11 +24,12 @@ final class Task
     }
 
     public static function create(
+        TaskId $id,
         string $title,
         UserId $userId
     ): self {
         return new self(
-            TaskId::generate(),
+            $id,
             $title,
             $userId
         );

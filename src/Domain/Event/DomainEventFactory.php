@@ -5,7 +5,7 @@ namespace App\Domain\Event;
 use App\Domain\Task\Task;
 use App\Domain\Enum\TaskStatus;
 
-final class DomainEventFactory
+final class DomainEventFactory implements DomainEventFactoryInterface
 {
     public function taskCreated(Task $task): TaskCreatedEvent
     {
