@@ -13,6 +13,18 @@ final readonly class UserDoctrineRepository implements UserRepositoryInterface
         private EntityManagerInterface $em
     ) {}
 
+    public function exists(UserId $id): bool
+    {
+        return (bool) $this->em
+            ->createQueryBuilder()
+            ->select('1')
+            ->from(UserEntity::class, 'u')
+            ->where('u.id = :id')
+            ->setParameter('id', $id->value())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function save(User $user): void
     {
         try {
