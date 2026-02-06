@@ -8,6 +8,7 @@ final readonly class CreateTaskCommand
 {
     public function __construct(
         public string $title,
-        public UserId $userId
+        public ?UserId $requestedUserId,
+        public UserId $currentUserId,
     ) {}
 }

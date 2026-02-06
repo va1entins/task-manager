@@ -5,15 +5,16 @@ namespace App\Infrastructure\Http\Controller\Api;
 use App\Application\Dto\CreateTaskCommand;
 use App\Application\Service\CurrentUserProviderInterface;
 use App\Application\UseCase\CreateTask;
+use App\Domain\User\UserId;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 final readonly class CreateTaskController
 {
     public function __construct(
-        private CreateTask                    $useCase,
-        private CurrentUserProviderInterface  $currentUserProvider
-    ){}
+        private CreateTask                   $useCase,
+        private CurrentUserProviderInterface $currentUserProvider,
+    ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
@@ -25,17 +26,20 @@ final readonly class CreateTaskController
                 JSON_THROW_ON_ERROR
             );
 
-            $user = $this->currentUserProvider->getCurrentUser();
+            $currentUser = $this->currentUserProvider->getCurrentUser();
 
-            if ($user === null) {
+            if ($currentUser === null) {
                 return new JsonResponse([
-                    'error' => 'Unauthenticated'
+                    'error' => 'Unauthenticated',
                 ], 401);
             }
 
             $command = new CreateTaskCommand(
                 title: $data['title'] ?? '',
-                userId: $user->id()
+                requestedUserId: isset($data['userId'])
+                    ? new UserId((string) $data['userId'])
+                    : null,
+                currentUserId: $currentUser->id()
             );
 
             $task = $this->useCase->execute($command);
