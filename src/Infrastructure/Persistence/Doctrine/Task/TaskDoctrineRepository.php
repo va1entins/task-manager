@@ -16,14 +16,21 @@ final readonly class TaskDoctrineRepository implements TaskRepositoryInterface
 
     public function save(Task $task): void
     {
-        $entity = new TaskEntity(
-            $task->id()->value(),
-            $task->title(),
-            $task->status(),
-            $task->userId()->value()
-        );
+        $entity = $this->em->find(TaskEntity::class, $task->id()->value());
 
-        $this->em->persist($entity);
+        if ($entity === null) {
+            $entity = new TaskEntity(
+                $task->id()->value(),
+                $task->title(),
+                $task->status(),
+                $task->userId()->value()
+            );
+
+            $this->em->persist($entity);
+        } else {
+            $entity->changeStatus($task->status());
+        }
+
         $this->em->flush();
     }
 
