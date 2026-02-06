@@ -11,6 +11,8 @@ interface UserRepositoryInterface
 
     public function findById(UserId $id): ?User;
 
+    public function exists(UserId $id): bool;
+
     /**
      * @return User[]
      */

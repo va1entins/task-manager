@@ -24,7 +24,7 @@ final readonly class CreateTask
     {
         $userId = $command->requestedUserId ?? $command->currentUserId;
 
-        if ($this->users->findById($userId) === null) {
+        if (! $this->users->exists($userId)) {
             throw new \RuntimeException('User not found');
         }
 
